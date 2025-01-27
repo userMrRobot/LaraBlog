@@ -1,0 +1,50 @@
+
+services:
+    nginx_blog:
+        image: nginx:latest
+        volumes:
+            - ./:/var/www
+            - ./_docker/nginx/conf.d/:/etc/nginx/conf.d
+
+        ports:
+            - "8010:80"
+        depends_on:
+            -  app_blog
+        container_name: app_blog_nginx
+
+
+    app_blog:
+        build:
+            context: .
+            dockerfile: _docker/app/Dockerfile
+        environment:
+            - TZ=Europe/Moscow
+        volumes:
+            - ./:/var/www
+        container_name: app_blog
+
+
+    db_blog:
+        image: mysql:8.0
+        restart: always
+        volumes:
+            - ./tmp/db:/var/lib/mysql
+        environment:
+            MYSQL-DATABASE: LaraBlog
+            MYSQL_ROOT_PASSWORD: root
+        ports:
+            - "8011:3306"
+        command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+        container_name: db_blog
+
+    phpmyadmin_blog:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmindb_blog
+        environment:
+            PMA_HOST: db_blog
+            MYSQL_ROOT_PASSWORD: example
+        ports:
+            - "8020:80"
+
+        depends_on:
+            - db_blog
