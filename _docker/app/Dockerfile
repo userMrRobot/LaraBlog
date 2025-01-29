@@ -30,3 +30,5 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 
 # Устанавливаем рабочую директорию
 WORKDIR /var/www
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache

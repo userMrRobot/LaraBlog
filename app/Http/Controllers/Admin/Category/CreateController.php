@@ -10,6 +10,6 @@ class CreateController extends Controller
     public function __invoke()
     {
 //        dd(11111);
-        return view('admin.categories.create');
+        return view('admin.category.create');
     }
 }

@@ -12,6 +12,6 @@ class ShowController extends Controller
     {
 
 
-        return view('admin.categories.show', compact('category'));
+        return view('admin.category.show', compact('category'));
     }
 }
