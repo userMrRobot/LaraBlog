@@ -24,9 +24,11 @@ class StoreRequest extends FormRequest
         return [
             'title' => 'required|string',
             'content' => 'required|string',
-            'preview_image' => 'required|file|image|mimes:jpeg,jpg',
-            'main_image' => 'required|file|image|mimes:jpeg,jpg',
+            'preview_image' => 'required|file|image',
+            'main_image' => 'required|file|image',
             'category_id' => 'required|exists:categories,id',
+            'tag_id' => 'nullable|array',
+
         ];
     }
     public function messages(): array
@@ -36,7 +38,9 @@ class StoreRequest extends FormRequest
             'string' => 'Только строки',
             'file' => 'Не тот тип данных',
             'image' => 'Только картинки',
-            'mimes' => 'Разрешено загружать только файлы jpeg,jpg'
+            'mimes' => 'Разрешено загружать только файлы jpeg,jpg',
+
+
         ];
     }
 }

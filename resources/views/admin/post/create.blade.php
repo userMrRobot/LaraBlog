@@ -92,6 +92,18 @@
 
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label>Теги</label>
+                                <select class="select2" name="tag_id[]" multiple="multiple"
+                                        data-placeholder="Выберите теги" style="width: 100%;">
+                                    @foreach($tags as $tag)
+                                        <option {{is_array(old('tag_id')) && in_array($tag->id, old('tag_id'))
+                                                ? 'selected' : ''}}
+                                                value="{{$tag->id}}">{{$tag->title}}</option>
+                                    @endforeach
+
+                                </select>
+                            </div>
 
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary mt-4">Добавить</button>

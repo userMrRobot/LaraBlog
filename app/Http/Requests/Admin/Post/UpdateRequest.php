@@ -23,13 +23,21 @@ class UpdateRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
+            'content' => 'required|string',
+            'preview_image' => 'nullable|file|image',
+            'main_image' => 'nullable|file|image',
+            'category_id' => 'required|exists:categories,id',
+            'tag_id' => 'nullable|array',
         ];
     }
 
     public function messages(): array{
         return [
             'required' => 'Поле обязательно к заполнению',
-            'string' => 'Только строки'
+            'string' => 'Только строки',
+            'file' => 'Не тот тип данных',
+            'image' => 'Только картинки',
+            'mimes' => 'Разрешено загружать только файлы jpeg,jpg',
         ];
     }
 }
