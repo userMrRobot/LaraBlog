@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,12 +20,48 @@ use Illuminate\Support\Facades\Storage;
 //});
 
 Route::group(['namespace' => 'App\Http\Controllers\Main'], function () {
-    Route::get('/', 'IndexController');
+    Route::get('/', 'IndexController')->name('home');
 });
 
-Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin'], function () {
+Route::group(['namespace' => 'App\Http\Controllers\Post', 'prefix' => 'posts'], function () {
+    Route::get('/', 'IndexController')->name('post.index');
+    Route::get('/{post}', 'ShowController')->name('post.show');
+
+    Route::group(['namespace' => 'Comment', 'prefix'=>'{post}/comments'], function () {
+        Route::post('/', 'StoreController')->name('post.comment.store');
+
+    });
+    Route::group(['namespace' => 'Like', 'prefix'=>'{post}/likes'], function () {
+        Route::post('/', 'StoreController')->name('post.like.store');
+
+    });
+
+
+});
+
+//роуты для личного кабинета
+Route::group(['namespace' => 'App\Http\Controllers\Personal', 'prefix' => 'personal', 'middleware' => ['auth','verified']], function () {
+    Route::group(['namespace' => 'Main', 'prefix' => 'main'], function () {
+        Route::get('/', 'IndexController')->name('personal.main.index');
+    });
+    //перекрываются роуты
+    Route::group(['namespace' => 'Liked', 'prefix' => 'liked'], function () {
+        Route::get('/', 'IndexController')->name('personal.liked.index');
+        Route::delete('/{post}', 'DeleteController')->name('personal.liked.delete');
+
+    });
+    Route::group(['namespace' => 'Comment', 'prefix' => 'comment'], function () {
+        Route::get('/', 'IndexController')->name('personal.comment.index');
+        Route::get('/{comment}/edit', 'EditController')->name('personal.comment.edit');
+        Route::patch('/{comment}', 'UpdateController')->name('personal.comment.update');
+        Route::delete('/{comment}', 'DeleteController')->name('personal.comment.delete');
+    });
+
+});
+//роуты для админки
+Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 'middleware' => ['auth','admin','verified']], function () {
     Route::group(['namespace' => 'Main'], function () {
-        Route::get('/', 'IndexController');
+        Route::get('/', 'IndexController')->name('admin');
     });
     Route::group(['namespace' => 'Post', 'prefix' => 'posts'], function () {
         Route::get('/', 'IndexController')->name('admin.post.index');
@@ -56,16 +93,20 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin'],
         Route::delete('/{tag}', 'DeleteController')->name('admin.tag.delete');
     });
 
+    Route::group(['namespace' => 'User', 'prefix' => 'user'], function () {
+        Route::get('/', 'IndexController')->name('admin.user.index');
+        Route::get('/create', 'CreateController')->name('admin.user.create');
+        Route::post('/', 'StoreController')->name('admin.user.store');
+        Route::get('/{user}', 'ShowController')->name('admin.user.show');
+        Route::get('/{user}/edit', 'EditController')->name('admin.user.edit');
+        Route::patch('/{user}', 'UpdateController')->name('admin.user.update');
+        Route::delete('/{user}', 'DeleteController')->name('admin.user.delete');
+    });
+
 
 });
-Auth::routes();
+// стандартные роуты лк
+Auth::routes(['verify' => true]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/111',function (){
-    $path = '/111.jpg';
 
-    $url = Storage::url($path);
-
-    return $url;
-});

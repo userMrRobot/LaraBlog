@@ -10,21 +10,13 @@ use App\Models\PostTag;
 use Illuminate\Support\Facades\Storage;
 
 
-class StoreController extends Controller
+class StoreController extends BaseController
 {
     public function __invoke(StoreRequest $request)
     {
         $data = $request->validated();
-        $tagsId = $data['tag_id'];
-        unset($data['tag_id']);
+        $this->service->store($data);
 
-
-
-        $data['preview_image'] = Storage::disk('public')->put('/images', $data['preview_image']);
-        $data['main_image'] = Storage::disk('public')->put('/images', $data['main_image']);
-
-        $post = Post::query()->firstOrCreate($data);
-        $post->tags()->attach($tagsId);
         return redirect()->route('admin.post.index');
 
     }

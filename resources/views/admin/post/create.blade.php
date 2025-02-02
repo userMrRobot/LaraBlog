@@ -89,7 +89,9 @@
                                         <option value="{{$category->id}}">{{$category->title}}</option>
                                     @endforeach
 
-
+                                        @error('category_id')
+                                        <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
                                 </select>
                             </div>
                             <div class="form-group">
@@ -103,6 +105,9 @@
                                     @endforeach
 
                                 </select>
+                                @error('tag_id')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <div class="form-group">
