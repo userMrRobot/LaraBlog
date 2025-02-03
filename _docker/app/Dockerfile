@@ -4,7 +4,7 @@ FROM php:8.2-fpm
 RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf && \
     echo "nameserver 8.8.4.4" >> /etc/resolv.conf
 
-# Обновляем систему, устанавливаем пакеты и зависимости
+# Устанавливаем необходимые пакеты и зависимости
 RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
     tzdata \
     apt-utils \
@@ -13,7 +13,9 @@ RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
     libzip-dev \
     zip unzip \
     git \
-    ca-certificates && \  # Устанавливаем сертификаты для безопасных подключений
+    ca-certificates && \
+    # Устанавливаем инструменты для работы с расширениями PHP
+    apt-get install -y libssl-dev libcurl4-openssl-dev pkg-config && \
     docker-php-ext-install pdo_mysql bcmath gd zip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -38,5 +40,5 @@ WORKDIR /var/www
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-# Проверка подключения к интернету (необязательно, но полезно для диагностики)
+# Проверка подключения к интернету
 RUN curl -I https://www.google.com || echo "No internet connection"
