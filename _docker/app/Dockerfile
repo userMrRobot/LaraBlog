@@ -1,7 +1,7 @@
 FROM php:8.2-fpm
 
 # Устанавливаем необходимые пакеты и зависимости
-RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
       tzdata \
       apt-utils \
       libpq-dev \
