@@ -21,6 +21,9 @@ services:
             - TZ=Europe/Moscow
         volumes:
             - ./:/var/www
+        dns:
+          - 8.8.8.8
+          - 8.8.4.4
         container_name: app_blog
 
 

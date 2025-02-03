@@ -1,24 +1,17 @@
 FROM php:8.2-fpm
 
-# Устанавливаем DNS-серверы Google для контейнера
-RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf && \
-    echo "nameserver 8.8.4.4" >> /etc/resolv.conf
-
 # Устанавливаем необходимые пакеты и зависимости
 RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
-    tzdata \
-    apt-utils \
-    libpq-dev \
-    libpng-dev \
-    libzip-dev \
-    zip unzip \
-    git \
-    ca-certificates && \
-    # Устанавливаем инструменты для работы с расширениями PHP
-    apt-get install -y libssl-dev libcurl4-openssl-dev pkg-config && \
-    docker-php-ext-install pdo_mysql bcmath gd zip && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+      tzdata \
+      apt-utils \
+      libpq-dev \
+      libpng-dev \
+      libzip-dev \
+      zip unzip \
+      git && \
+      docker-php-ext-install pdo_mysql bcmath gd zip && \
+      apt-get clean && \
+      rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Устанавливаем временную зону
 ENV TZ=Europe/Moscow
@@ -39,6 +32,3 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 WORKDIR /var/www
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
-
-# Проверка подключения к интернету
-RUN curl -I https://www.google.com || echo "No internet connection"
