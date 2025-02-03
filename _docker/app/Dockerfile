@@ -1,23 +1,28 @@
 FROM php:8.2-fpm
 
+# Устанавливаем DNS-серверы Google для контейнера
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf && \
+    echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+
+# Обновляем систему, устанавливаем пакеты и зависимости
+RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
+    tzdata \
+    apt-utils \
+    libpq-dev \
+    libpng-dev \
+    libzip-dev \
+    zip unzip \
+    git \
+    ca-certificates && \  # Устанавливаем сертификаты для безопасных подключений
+    docker-php-ext-install pdo_mysql bcmath gd zip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Устанавливаем временную зону
 ENV TZ=Europe/Moscow
-RUN ln -sf /usr/share/zoneinfo/$TZ /etc/localtime && \
-    echo $TZ > /etc/timezone && \
+RUN echo "Europe/Moscow" > /etc/timezone && \
+    ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
-
-# Устанавливаем необходимые пакеты и зависимости
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      tzdata \
-      apt-utils \
-      libpq-dev \
-      libpng-dev \
-      libzip-dev \
-      zip unzip \
-      git \
-      && docker-php-ext-install pdo_mysql bcmath gd zip \
-      && apt-get clean \
-      && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Копируем файл конфигурации PHP
 COPY ./_docker/app/php.ini /usr/local/etc/php/conf.d/php.ini
@@ -30,8 +35,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 
 # Устанавливаем рабочую директорию
 WORKDIR /var/www
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-# Устанавливаем права на папки
-RUN mkdir -p /var/www/storage /var/www/bootstrap/cache && \
-    chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache && \
-    chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+# Проверка подключения к интернету (необязательно, но полезно для диагностики)
+RUN curl -I https://www.google.com || echo "No internet connection"
