@@ -44,7 +44,12 @@ services:
             PMA_HOST: db_blog
             MYSQL_ROOT_PASSWORD: example
         ports:
-            - "8020:80"
+            - "8022:80"
 
         depends_on:
             - db_blog
+networks:
+    default:
+        driver: bridge
+        driver_opts:
+            com.docker.network.driver.mtu: 1450

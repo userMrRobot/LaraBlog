@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -104,6 +105,12 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 
     });
 
 
+});
+Route::fallback(function () {
+    if(Auth::check()) {
+        return response()->view('errors.404auth', [], 404);
+    }
+    return response()->view('errors.404guest', [], 404);
 });
 // стандартные роуты лк
 Auth::routes(['verify' => true]);

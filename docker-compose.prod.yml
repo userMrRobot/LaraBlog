@@ -37,5 +37,9 @@ services:
             - "8011:3306"
         command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
         container_name: db_blog
-
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450
 

@@ -35,28 +35,30 @@
                                     @endif
                                 @endauth
 
-
-
                             </button>
                         </form>
+                        @guest()
+                            <i class="far fa-heart"></i>
+                        @endif
 
                     </section>
                     @if($relationPosts->count() > 0)
-                    <section class="related-posts">
-                        <h2 class="section-title mb-4" data-aos="fade-up">Похожие посты</h2>
-                        <div class="row">
-                            @foreach($relationPosts as $related_post)
-                                <div class="col-md-4" data-aos="fade-left" data-aos-delay="100">
-                                    <img src="{{asset('storage/' . $related_post->main_image)}}" alt="related post"
-                                         class="post-thumbnail">
-                                    <p class="post-category">{{$related_post->category->title}}</p>
-                                    <a href="{{route('post.show', $related_post->id)}}"><h5
-                                            class="post-title">{!! $related_post->title !!}</h5></a>
-                                </div>
-                            @endforeach
-                        </div>
-                    </section>
+                        <section class="related-posts">
+                            <h2 class="section-title mb-4" data-aos="fade-up">Похожие посты</h2>
+                            <div class="row">
+                                @foreach($relationPosts as $related_post)
+                                    <div class="col-md-4" data-aos="fade-left" data-aos-delay="100">
+                                        <img src="{{asset('storage/' . $related_post->main_image)}}" alt="related post"
+                                             class="post-thumbnail">
+                                        <p class="post-category">{{$related_post->category->title}}</p>
+                                        <a href="{{route('post.show', $related_post->id)}}"><h5
+                                                class="post-title">{!! $related_post->title !!}</h5></a>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </section>
                     @endif
+
                     <section class="comment-list mb-1">
                         @foreach($post->coments as $comment)
                             <div class="comment-text mb-3">
@@ -71,28 +73,29 @@
                             </div>
                         @endforeach
                     </section>
-                    @auth()
 
-                    <section class="comment-section">
-                        <h2 class="section-title mb-5" data-aos="fade-up">Оставить коментарий</h2>
-                        <form action="{{route('post.comment.store', $post->id)}}" method="post">
-                            @csrf
-                            <div class="row">
-                                <div class="form-group col-12" data-aos="fade-up">
-                                    <label for="comment" class="sr-only">Comment</label>
-                                    <textarea name="message" id="comment" class="form-control"
-                                              placeholder="Оставьте коментарий" rows="10"></textarea>
+                    @auth()
+                        <section class="comment-section">
+                            <h2 class="section-title mb-5" data-aos="fade-up">Оставить коментарий</h2>
+                            <form action="{{route('post.comment.store', $post->id)}}" method="post">
+                                @csrf
+                                <div class="row">
+                                    <div class="form-group col-12" data-aos="fade-up">
+                                        <label for="comment" class="sr-only">Comment</label>
+                                        <textarea name="message" id="comment" class="form-control"
+                                                  placeholder="Оставьте коментарий" rows="10"></textarea>
+                                    </div>
                                 </div>
-                            </div>
-                            <input type="hidden" name="post_id" value="{{$post->id}}">
-                            <div class="row">
-                                <div class="col-12" data-aos="fade-up">
-                                    <input type="submit" value="Добавить" class="btn btn-warning">
+                                <input type="hidden" name="post_id" value="{{$post->id}}">
+                                <div class="row">
+                                    <div class="col-12" data-aos="fade-up">
+                                        <input type="submit" value="Добавить" class="btn btn-warning">
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
-                    </section>
+                            </form>
+                        </section>
                     @endauth
+
                 </div>
             </div>
         </div>

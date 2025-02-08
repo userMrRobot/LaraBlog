@@ -3,7 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Notifications\SendVerifyWithQueueNotification;
+use App\Notifications\ResetPasswordCustom;
+use App\Notifications\VerifyEmailCustomQueueNotification;
+use App\Notifications\VerifyEmailCustom;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,7 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
     const ROLE_ADMIN = 0;
     const ROLE_USER = 1;
 
-    public static function getRoles ()
+    public static function getRoles()
     {
         return [
             self::ROLE_ADMIN => 'Админ',
@@ -61,7 +63,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new SendVerifyWithQueueNotification());
+        $this->notify(new VerifyEmailCustomQueueNotification());
+
+    }
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordCustom($token));
     }
 
     public function likedPosts()
