@@ -44,7 +44,7 @@ services:
             PMA_HOST: db_blog
             MYSQL_ROOT_PASSWORD: example
         ports:
-            - "8022:80"
+            - "8028:80"
 
         depends_on:
             - db_blog

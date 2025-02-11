@@ -106,6 +106,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 
 
 
 });
+Route::get('/111', [ App\Http\Controllers\CollectionController::class, 'index']);
+
 Route::fallback(function () {
     if(Auth::check()) {
         return response()->view('errors.404auth', [], 404);

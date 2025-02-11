@@ -28,6 +28,7 @@ class PostService
             DB::rollBack();
             abort(500, $e->getMessage());
         }
+        return $post;
 
     }
 
