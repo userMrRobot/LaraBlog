@@ -20,6 +20,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
     return $request->user();
 });
+Route::group(['namespace' => 'App\Http\Controllers\Vue', 'prefix' => 'vue'], function () {
+    Route::get('/{page}', 'IndexController')->name('vue.index')->where('page', '.*');
+
+});
+Route::group(['namespace' => '\App\Http\Controllers\Person', 'prefix' => 'person'], function () {
+    Route::get('/', 'IndexController');
+    Route::get('/{person}', 'ShowController');
+    Route::post('/', 'StoreController');
+    Route::patch('/{person}', 'UpdateController');
+    Route::delete('/{person}', 'DeleteController');
+
+});
+
+
+
 Route::post('/registerApi', [\App\Http\Controllers\Api\ApiController::class, 'register'])
     ->middleware(['throttle:api']);
 

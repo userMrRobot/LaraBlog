@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\PersonController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 
 /*
@@ -22,6 +22,10 @@ use Illuminate\Support\Facades\Storage;
 
 Route::group(['namespace' => 'App\Http\Controllers\Main'], function () {
     Route::get('/', 'IndexController')->name('home');
+});
+//контроллера для работы с вью-роутером
+Route::group(['namespace' => 'App\Http\Controllers\Vue', 'prefix' => 'vue'], function () {
+    Route::get('/{page}', 'IndexController')->name('vue.index')->where('page', '.*');
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\Post', 'prefix' => 'posts'], function () {
@@ -106,8 +110,13 @@ Route::group(['namespace' => 'App\Http\Controllers\Admin', 'prefix' => 'admin', 
 
 
 });
-Route::get('/111', [ App\Http\Controllers\CollectionController::class, 'index']);
-
+Route::get('/111', function (){
+    return view('vue');
+});
+Route::get('/person', [PersonController::class, 'index'])->name('person.index');
+Route::get('/persons', function (){
+    return 11111;
+});
 Route::fallback(function () {
     if(Auth::check()) {
         return response()->view('errors.404auth', [], 404);

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue'; // Импорт плагина Vue.js
 
 export default defineConfig({
     plugins: [
@@ -10,6 +11,7 @@ export default defineConfig({
             ],
             refresh: true,
         }),
+        vue(), // Плагин Vue.js
     ],
     // настройка для того чтобы npm install работал коректно
     //server:{
